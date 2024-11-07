@@ -27,7 +27,3 @@ npm run lint
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-## 토큰
-
-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
