@@ -71,23 +71,28 @@ export default {
     const isMobileMenuOpen = ref(false);
     const router = useRouter();
 
+    // 스크롤 상태 변경
     const handleScroll = () => {
       isScrolled.value = window.scrollY > 50;
     };
 
+    // 모바일 메뉴 토글
     const toggleMobileMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
     };
 
+    // 로컬 스토리지 키 제거 및 로그인 페이지로 이동
     const removeKey = () => {
       localStorage.removeItem("auth-token");
       router.push("/login");
     };
 
+    // 컴포넌트가 마운트되었을 때 이벤트 리스너 등록
     onMounted(() => {
       window.addEventListener("scroll", handleScroll);
     });
 
+    // 컴포넌트가 언마운트되었을 때 이벤트 리스너 제거
     onUnmounted(() => {
       window.removeEventListener("scroll", handleScroll);
     });
@@ -103,7 +108,6 @@ export default {
 </script>
 
 <style scoped>
-/* 적용된 스타일 */
 .app-header {
   height: 40px;
   display: flex;

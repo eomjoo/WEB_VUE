@@ -33,10 +33,7 @@
               </div>
               <span class="checkbox remember">
                 <input type="checkbox" id="remember" v-model="rememberMe" />
-                <label for="remember">Remember me</label>
-              </span>
-              <span class="checkbox forgot">
-                <a href="#">Forgot Password?</a>
+                <label for="remember" class="read-text">Remember me</label>
               </span>
               <button :disabled="!isLoginFormValid">Login</button>
             </form>
@@ -81,25 +78,6 @@
                 />
                 <label for="register-password">Password</label>
               </div>
-              <div
-                class="input"
-                :class="{ active: isConfirmPasswordFocused || confirmPassword }"
-              >
-                <input
-                  id="confirm-password"
-                  type="password"
-                  v-model="confirmPassword"
-                  @focus="focusInput('confirmPassword')"
-                  @blur="blurInput('confirmPassword')"
-                />
-                <label for="confirm-password">Confirm Password</label>
-              </div>
-              <span class="checkbox remember">
-                <input type="checkbox" id="terms" v-model="acceptTerms" />
-                <label for="terms"
-                  >I have read <b>Terms and Conditions</b></label
-                >
-              </span>
               <button :disabled="!isRegisterFormValid">Register</button>
             </form>
             <a
@@ -119,7 +97,7 @@
 
 <script>
 export default {
-  name: "SignInForm",
+  name: "SignInSignUp",
   data() {
     return {
       isLoginVisible: true,
@@ -127,28 +105,14 @@ export default {
       password: "",
       registerEmail: "",
       registerPassword: "",
-      confirmPassword: "",
-      rememberMe: false,
-      acceptTerms: false,
       isEmailFocused: false,
       isPasswordFocused: false,
-      isRegisterEmailFocused: false,
-      isRegisterPasswordFocused: false,
-      isConfirmPasswordFocused: false,
+      rememberMe: false,
     };
   },
   computed: {
     isLoginFormValid() {
       return !!this.email && !!this.password;
-    },
-    isRegisterFormValid() {
-      return (
-        !!this.registerEmail &&
-        !!this.registerPassword &&
-        !!this.confirmPassword &&
-        this.registerPassword === this.confirmPassword &&
-        this.acceptTerms
-      );
     },
   },
   methods: {
@@ -166,26 +130,74 @@ export default {
       ] = false;
     },
     handleLogin() {
-      // 여기에 로그인 로직 추가
-      if (this.email === "test@example.com" && this.password === "password") {
-        alert("Login Successful!");
-      } else {
-        alert("Login Failed!");
-      }
+      alert("Login logic here!");
     },
     handleRegister() {
-      // 여기에 회원가입 로직 추가
-      if (this.isRegisterFormValid) {
-        alert("Registration Successful!");
-        this.toggleCard();
-      } else {
-        alert("Registration Failed!");
-      }
+      alert("Register logic here!");
     },
   },
 };
 </script>
 
 <style scoped>
-/* 스타일은 기존의 스타일을 유지 */
+/* 통합된 스타일 */
+
+:root {
+  --container-start-color: #ececec;
+  --container-end-color: #100f0f;
+}
+
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+  background-size: cover;
+  background-position: center;
+}
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#phone {
+  width: 50%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.card {
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hidden {
+  display: none;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px;
+  background: #2069ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 </style>
