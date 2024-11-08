@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Welcome to the Main Page</h1>
+    <h1>views에서 표시되는거</h1>
     <button @click="logout">Logout</button>
   </div>
 </template>

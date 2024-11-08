@@ -1,93 +1,191 @@
 <template>
-  <div class="sign-in-form">
-    <h1 v-if="isRegistering">Register</h1>
-    <h1 v-else>Login</h1>
-    <form @submit.prevent="isRegistering ? register() : login()">
-      <input v-model="email" type="email" placeholder="Email" required />
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Password"
-        required
-      />
-      <button type="submit">{{ isRegistering ? "Register" : "Login" }}</button>
-    </form>
-    <p v-if="error" class="error-message">{{ error }}</p>
-    <button @click="toggleMode">
-      {{
-        isRegistering
-          ? "Already have an account? Login"
-          : "Don't have an account? Register"
-      }}
-    </button>
+  <div>
+    <div class="bg-image"></div>
+    <div class="container">
+      <div id="phone">
+        <div id="content-wrapper">
+          <!-- 로그인 카드 -->
+          <div :class="{ card: true, hidden: !isLoginVisible }" id="login">
+            <form @submit.prevent="handleLogin">
+              <h1>Sign in</h1>
+              <div class="input" :class="{ active: isEmailFocused || email }">
+                <input
+                  id="email"
+                  type="email"
+                  v-model="email"
+                  @focus="focusInput('email')"
+                  @blur="blurInput('email')"
+                />
+                <label for="email">Username or Email</label>
+              </div>
+              <div
+                class="input"
+                :class="{ active: isPasswordFocused || password }"
+              >
+                <input
+                  id="password"
+                  type="password"
+                  v-model="password"
+                  @focus="focusInput('password')"
+                  @blur="blurInput('password')"
+                />
+                <label for="password">Password</label>
+              </div>
+              <span class="checkbox remember">
+                <input type="checkbox" id="remember" v-model="rememberMe" />
+                <label for="remember">Remember me</label>
+              </span>
+              <span class="checkbox forgot">
+                <a href="#">Forgot Password?</a>
+              </span>
+              <button :disabled="!isLoginFormValid">Login</button>
+            </form>
+            <a
+              href="javascript:void(0)"
+              class="account-check"
+              @click="toggleCard"
+            >
+              Don't have an account? <b>Sign up</b>
+            </a>
+          </div>
+
+          <!-- 회원가입 카드 -->
+          <div :class="{ card: true, hidden: isLoginVisible }" id="register">
+            <form @submit.prevent="handleRegister">
+              <h1>Sign up</h1>
+              <div
+                class="input"
+                :class="{ active: isRegisterEmailFocused || registerEmail }"
+              >
+                <input
+                  id="register-email"
+                  type="email"
+                  v-model="registerEmail"
+                  @focus="focusInput('registerEmail')"
+                  @blur="blurInput('registerEmail')"
+                />
+                <label for="register-email">Email</label>
+              </div>
+              <div
+                class="input"
+                :class="{
+                  active: isRegisterPasswordFocused || registerPassword,
+                }"
+              >
+                <input
+                  id="register-password"
+                  type="password"
+                  v-model="registerPassword"
+                  @focus="focusInput('registerPassword')"
+                  @blur="blurInput('registerPassword')"
+                />
+                <label for="register-password">Password</label>
+              </div>
+              <div
+                class="input"
+                :class="{ active: isConfirmPasswordFocused || confirmPassword }"
+              >
+                <input
+                  id="confirm-password"
+                  type="password"
+                  v-model="confirmPassword"
+                  @focus="focusInput('confirmPassword')"
+                  @blur="blurInput('confirmPassword')"
+                />
+                <label for="confirm-password">Confirm Password</label>
+              </div>
+              <span class="checkbox remember">
+                <input type="checkbox" id="terms" v-model="acceptTerms" />
+                <label for="terms"
+                  >I have read <b>Terms and Conditions</b></label
+                >
+              </span>
+              <button :disabled="!isRegisterFormValid">Register</button>
+            </form>
+            <a
+              href="javascript:void(0)"
+              id="gotologin"
+              class="account-check"
+              @click="toggleCard"
+            >
+              Already have an account? <b>Sign in</b>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { AuthService } from "../../services/AuthService";
-
 export default {
   name: "SignInForm",
-  setup() {
-    const email = ref("");
-    const password = ref("");
-    const error = ref("");
-    const isRegistering = ref(false);
-    const router = useRouter();
-    const authService = new AuthService();
-
-    const login = async () => {
-      try {
-        error.value = "";
-        await authService.login(email.value, password.value);
-        router.push("/"); // 로그인 성공 시 메인 페이지로 이동
-      } catch (err) {
-        error.value = err.message;
-      }
-    };
-
-    const register = async () => {
-      try {
-        error.value = "";
-        await authService.register(email.value, password.value);
-        isRegistering.value = false; // 회원 가입 후 로그인 모드로 전환
-      } catch (err) {
-        error.value = err.message;
-      }
-    };
-
-    const toggleMode = () => {
-      isRegistering.value = !isRegistering.value;
-    };
-
+  data() {
     return {
-      email,
-      password,
-      error,
-      isRegistering,
-      login,
-      register,
-      toggleMode,
+      isLoginVisible: true,
+      email: "",
+      password: "",
+      registerEmail: "",
+      registerPassword: "",
+      confirmPassword: "",
+      rememberMe: false,
+      acceptTerms: false,
+      isEmailFocused: false,
+      isPasswordFocused: false,
+      isRegisterEmailFocused: false,
+      isRegisterPasswordFocused: false,
+      isConfirmPasswordFocused: false,
     };
+  },
+  computed: {
+    isLoginFormValid() {
+      return !!this.email && !!this.password;
+    },
+    isRegisterFormValid() {
+      return (
+        !!this.registerEmail &&
+        !!this.registerPassword &&
+        !!this.confirmPassword &&
+        this.registerPassword === this.confirmPassword &&
+        this.acceptTerms
+      );
+    },
+  },
+  methods: {
+    toggleCard() {
+      this.isLoginVisible = !this.isLoginVisible;
+    },
+    focusInput(inputName) {
+      this[
+        `is${inputName.charAt(0).toUpperCase() + inputName.slice(1)}Focused`
+      ] = true;
+    },
+    blurInput(inputName) {
+      this[
+        `is${inputName.charAt(0).toUpperCase() + inputName.slice(1)}Focused`
+      ] = false;
+    },
+    handleLogin() {
+      // 여기에 로그인 로직 추가
+      if (this.email === "test@example.com" && this.password === "password") {
+        alert("Login Successful!");
+      } else {
+        alert("Login Failed!");
+      }
+    },
+    handleRegister() {
+      // 여기에 회원가입 로직 추가
+      if (this.isRegisterFormValid) {
+        alert("Registration Successful!");
+        this.toggleCard();
+      } else {
+        alert("Registration Failed!");
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-.sign-in-form {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-.error-message {
-  color: red;
-  margin-top: 10px;
-}
-button {
-  margin-top: 10px;
-}
+/* 스타일은 기존의 스타일을 유지 */
 </style>

@@ -1,13 +1,16 @@
 <template>
-  <router-view />
+  <div id="app">
+    <Header />
+    <router-view />
+  </div>
 </template>
 
 <script>
+import Header from "./components/header/Header.vue";
+
 export default {
-  name: "App",
+  components: {
+    Header,
+  },
 };
 </script>
-
-<style>
-/* 전역 스타일을 여기에 추가할 수 있습니다. */
-</style>

@@ -1,33 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import SignInView from '../views/SignInView.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import PopularView from "../views/PopularView.vue";
+import WishlistView from "../views/WishlistView.vue";
+import SearchView from "../views/SearchView.vue";
+import SignInView from "../views/SignInView.vue";
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomeView,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: SignInView,
-  },
+  { path: "/", name: "Home", component: HomeView },
+  { path: "/popular", name: "Popular", component: PopularView },
+  { path: "/wishlist", name: "Wishlist", component: WishlistView },
+  { path: "/search", name: "Search", component: SearchView },
+  { path: "/login", name: "Login", component: SignInView },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('auth-token');
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login');
-  } else {
-    next();
-  }
 });
 
 export default router;
